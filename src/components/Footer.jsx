@@ -2,8 +2,8 @@ import React from "react";
 
 const Footer = () => {
     return (
-        <footer className="bg-gray-800 text-white py-4 text-center fixed bottom-0 w-full">
-            <p>© {new Date().getFullYear()} Marking Application. All rights reserved.</p>
+        <footer className="bg-gray-900 p-4 text-center text-gray-400 w-full sticky bottom-0">
+            &copy; 2025 Student Management System
         </footer>
     );
 };
