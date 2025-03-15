@@ -38,3 +38,14 @@ export const addStudent = async (newStudent) => {
         return null;
     }
 };
+
+
+export const fetchAssignmentsByStudentId = async (studentId) => {
+    try {
+        const response = await axios.get(`${API_URL}/assignments/${studentId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching assignments:", error);
+        return null;
+    }
+};

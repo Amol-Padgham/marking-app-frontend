@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { fetchStudents, addStudent } from "../services/api"; // Import API functions
+import { fetchStudents, addStudent ,fetchAssignmentsByStudentId } from "../services/api"; // Import API functions
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { AddStudentModal } from "../components/AddStudentModal";
+import  AssignmentsModal from "../components/AssignmentsModal";
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -13,6 +14,9 @@ const StudentList = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
+
+  const [assignments, setAssignments] = useState(null);
+  const [isAssignmentsModalOpen, setIsAssignmentsModalOpen] = useState(false);
 
   useEffect(() => {
     loadStudents();
@@ -72,6 +76,11 @@ const StudentList = () => {
     setSortOrder(sortKey === key && sortOrder === "asc" ? "desc" : "asc");
     setSortKey(key);
   };
+  const handleViewAssignments = async (studentId) => {
+    const data = await fetchAssignmentsByStudentId(studentId);
+    setAssignments(data);
+    setIsAssignmentsModalOpen(true);
+  };
 
   return (
     <div className="bg-black text-white min-h-screen flex flex-col">
@@ -116,7 +125,8 @@ const StudentList = () => {
                       <td className="p-3">{student.email}</td>
                       <td className="p-3">{student.phone || "N/A"}</td>
                       <td className="p-3">
-                        <button
+                        <button 
+                        onClick={() => handleViewAssignments(student.id)}
                           className={`px-3 py-1 rounded ${
                             student.assignments.length > 0
                               ? "bg-blue-500 hover:bg-blue-600"
@@ -156,6 +166,11 @@ const StudentList = () => {
         )}
       </div>
       <AddStudentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleAddStudent} />
+      <AssignmentsModal
+        isOpen={isAssignmentsModalOpen}
+        onClose={() => setIsAssignmentsModalOpen(false)}
+        assignments={assignments}
+      />
       <Footer />
     </div>
   );
