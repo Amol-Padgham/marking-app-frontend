@@ -81,4 +81,15 @@ export const storeMarks = async (marksData) => {
         return null;
     }
 };
+
+
+export const registerUser = async (name, email, password, password_confirmation) => {
+  const response = await axios.post(`${API_URL}/register`, {
+    name,
+    email,
+    password,
+    password_confirmation,
+  });
+  return response.data;
+};
   
