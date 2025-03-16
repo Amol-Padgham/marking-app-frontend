@@ -121,13 +121,22 @@ const StudentList = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-700">
-                  <th className="p-3 cursor-pointer" onClick={() => toggleSort("id")}>
+                  <th
+                    className="p-3 cursor-pointer"
+                    onClick={() => toggleSort("id")}
+                  >
                     ID
                   </th>
-                  <th className="p-3 cursor-pointer" onClick={() => toggleSort("name")}>
+                  <th
+                    className="p-3 cursor-pointer"
+                    onClick={() => toggleSort("name")}
+                  >
                     Name
                   </th>
-                  <th className="p-3 cursor-pointer" onClick={() => toggleSort("email")}>
+                  <th
+                    className="p-3 cursor-pointer"
+                    onClick={() => toggleSort("email")}
+                  >
                     Email
                   </th>
                   <th className="p-3">Phone</th>
@@ -137,77 +146,89 @@ const StudentList = () => {
                 </tr>
               </thead>
               <tbody>
-  {currentRecords.length > 0 ? (
-    currentRecords.map((student) => (
-      <tr
-        key={student.id}
-        className="border-b border-gray-600 hover:bg-gray-800"
-      >
-        <td className="p-3">{student.id}</td>
-        <td className="p-3">{student.name}</td>
-        <td className="p-3">{student.email}</td>
-        <td className="p-3">{student.phone || "N/A"}</td>
-        <td className="p-3">
-          <button
-            onClick={() => handleViewAssignments(student.id)}
-            className={`px-3 py-1 rounded ${
-              student.assignments.length > 0
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "bg-gray-500 cursor-not-allowed opacity-50"
-            }`}
-            disabled={student.assignments.length === 0}
-          >
-            {student.assignments.length > 0 ? "View Assignments" : "No Assignments"}
-          </button>
-        </td>
-        <td className="p-3">
-          {student.assignments.length > 0
-            ? student.assignments[0].status || "Pending"
-            : "N/A"}
-        </td>
-        <td className="p-3">
-          {student.assignments.length > 0 &&
-          student.assignments[0].status.toLowerCase() !== "completed" ? (
-            <button
-              onClick={() => {
-                setAssignments(student.assignments);
-                setSelectedStudentId(student.id);
-                setSelectedAssignmentId(student.assignments[0].id);
-                setIsAddMarksModalOpen(true);
-              }}
-              className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded"
-            >
-              Add Marks
-            </button>
-          ) : (
-            <button
-              className="px-3 py-1 bg-gray-500 opacity-50 rounded cursor-not-allowed"
-              disabled
-            >
-              Add Marks
-            </button>
-          )}
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="7" className="p-3 text-center">
-        No records found
-      </td>
-    </tr>
-  )}
-</tbody>
-
+                {currentRecords.length > 0 ? (
+                  currentRecords.map((student) => (
+                    <tr
+                      key={student.id}
+                      className="border-b border-gray-600 hover:bg-gray-800"
+                    >
+                      <td className="p-3">{student.id}</td>
+                      <td className="p-3">{student.name}</td>
+                      <td className="p-3">{student.email}</td>
+                      <td className="p-3">{student.phone || "N/A"}</td>
+                      <td className="p-3">
+                        <button
+                          onClick={() => handleViewAssignments(student.id)}
+                          className={`px-3 py-1 rounded ${
+                            student.assignments.length > 0
+                              ? "bg-blue-500 hover:bg-blue-600"
+                              : "bg-gray-500 cursor-not-allowed opacity-50"
+                          }`}
+                          disabled={student.assignments.length === 0}
+                        >
+                          {student.assignments.length > 0
+                            ? "View Assignments"
+                            : "No Assignments"}
+                        </button>
+                      </td>
+                      <td className="p-3">
+                        {student.assignments.length > 0
+                          ? student.assignments[0].status || "Pending"
+                          : "N/A"}
+                      </td>
+                      <td className="p-3">
+                        {student.assignments.length > 0 &&
+                        student.assignments[0].status.toLowerCase() !==
+                          "completed" ? (
+                          <button
+                            onClick={() => {
+                              setAssignments(student.assignments);
+                              setSelectedStudentId(student.id);
+                              setSelectedAssignmentId(
+                                student.assignments[0].id
+                              );
+                              setIsAddMarksModalOpen(true);
+                            }}
+                            className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded"
+                          >
+                            Add Marks
+                          </button>
+                        ) : (
+                          <button
+                            className="px-3 py-1 bg-gray-500 opacity-50 rounded cursor-not-allowed"
+                            disabled
+                          >
+                            Add Marks
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="p-3 text-center">
+                      No records found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
             </table>
             <div className="flex justify-between p-4">
-              <button onClick={prevPage} disabled={currentPage === 1} className="bg-gray-700 px-3 py-1 rounded">
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className="bg-gray-700 px-3 py-1 rounded"
+              >
                 Previous
               </button>
               <span>
                 Page {currentPage} of {totalPages}
               </span>
-              <button onClick={nextPage} disabled={currentPage === totalPages} className="bg-gray-700 px-3 py-1 rounded">
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                className="bg-gray-700 px-3 py-1 rounded"
+              >
                 Next
               </button>
             </div>
@@ -231,8 +252,8 @@ const StudentList = () => {
         studentId={selectedStudentId}
         assignmentId={selectedAssignmentId}
         onSave={(response) => {
-            console.log("Marks saved:", response);
-          }}
+          console.log("Marks saved:", response);
+        }}
       />
       <Footer />
     </div>
