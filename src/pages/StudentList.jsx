@@ -235,7 +235,6 @@ const StudentList = () => {
           }}
       />
       <Footer />
-      <Footer />
     </div>
   );
 };
