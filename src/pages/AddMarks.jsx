@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { storeMarks } from "../services/api"; // Ensure this is correctly imported
+// import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const componentNames = {
   1: "Problem-Solving Skills",
@@ -15,6 +19,8 @@ const maxMarks = {
 };
 
 const AddMarksModal = ({ isOpen, onClose, onSave, studentId, assignmentId, initialMarks }) => {
+    console.log("Student ID:", studentId);
+    console.log("Assignment ID:", assignmentId);
   const [marks, setMarks] = useState(initialMarks || {});
   const [errors, setErrors] = useState({});
 
@@ -30,14 +36,72 @@ const AddMarksModal = ({ isOpen, onClose, onSave, studentId, assignmentId, initi
     setMarks({ ...marks, [componentId]: numValue });
   };
 
-  const handleSubmit = () => {
+//   const handleSubmit = () => {
+//     if (Object.values(errors).some((err) => err)) return;
+//     const formattedMarks = Object.keys(marks).map((key) => ({
+//       component_id: Number(key),
+//       marks_obtained: marks[key],
+//     }));
+//     onSave({ student_id: studentId, assignment_id: assignmentId, marks: formattedMarks });
+//     onClose();
+//   };
+
+// const handleSubmit = async () => {
+//     if (Object.values(errors).some((err) => err)) return;
+  
+//     const formattedMarks = Object.keys(marks).map((key) => ({
+//       component_id: Number(key),
+//       marks_obtained: marks[key],
+//     }));
+  
+//     const marksData = {
+//       student_id: studentId,
+//       assignment_id: assignmentId,
+//       marks: formattedMarks,
+//     };
+  
+//     try {
+//       const response = await storeMarks(marksData);
+//       if (response) {
+//         toast.success("Marks saved successfully!");
+//         onSave(response); // Optionally update UI state
+//         onClose();
+//       } else {
+//         toast.error("Failed to save marks. Please try again.");
+//       }
+//     } catch (error) {
+//       console.error("Error submitting marks:", error);
+//       toast.error("An error occurred while saving marks.");
+//     }
+//   };
+const handleSubmit = async () => {
     if (Object.values(errors).some((err) => err)) return;
-    const formattedMarks = Object.keys(marks).map((key) => ({
-      component_id: Number(key),
-      marks_obtained: marks[key],
+  
+    // Ensure marks are in the required format
+    const formattedMarks = Object.entries(marks).map(([key, value]) => ({
+      component_id: Number(key), // Ensure component_id is a number
+      marks_obtained: Number(value), // Ensure marks_obtained is a number
     }));
-    onSave({ student_id: studentId, assignment_id: assignmentId, marks: formattedMarks });
-    onClose();
+  
+    const marksData = {
+      student_id: Number(studentId), // Ensure student_id is a number
+      assignment_id: Number(assignmentId), // Ensure assignment_id is a number
+      marks: formattedMarks,
+    };
+  
+    try {
+      const response = await storeMarks(marksData);
+      if (response) {
+        toast.success("Marks saved successfully!");
+        onSave(response); // Optionally update UI state
+        onClose();
+      } else {
+        toast.error("Failed to save marks. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting marks:", error);
+      toast.error("An error occurred while saving marks.");
+    }
   };
 
   return (

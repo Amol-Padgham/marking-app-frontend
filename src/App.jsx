@@ -10,9 +10,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import StudentList from "./pages/StudentList";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
+    <>
+     <ToastContainer />
     <Router>
       <Routes>
       <Route path="/" element={<Login />} />
@@ -20,6 +23,7 @@ function App() {
         <Route path="/studentlist" element={<StudentList />} />
       </Routes>
     </Router>
+    </>
   );
 }
 
