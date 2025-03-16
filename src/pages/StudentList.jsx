@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { fetchStudents, addStudent ,fetchAssignmentsByStudentId } from "../services/api"; // Import API functions
+import {
+  fetchStudents,
+  addStudent,
+  fetchAssignmentsByStudentId,
+} from "../services/api"; // Import API functions
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { AddStudentModal } from "../components/AddStudentModal";
-import  AssignmentsModal from "../components/AssignmentsModal";
+import AssignmentsModal from "../components/AssignmentsModal";
+import AddMarksModal from "./AddMarks";
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -17,6 +22,8 @@ const StudentList = () => {
 
   const [assignments, setAssignments] = useState(null);
   const [isAssignmentsModalOpen, setIsAssignmentsModalOpen] = useState(false);
+
+  const [isAddMarksModalOpen, setIsAddMarksModalOpen] = useState(false);
 
   useEffect(() => {
     loadStudents();
@@ -62,7 +69,10 @@ const StudentList = () => {
   const totalPages = Math.ceil(filteredStudents.length / recordsPerPage);
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = filteredStudents.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecords = filteredStudents.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
 
   const nextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -108,9 +118,24 @@ const StudentList = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-700">
-                  <th className="p-3 cursor-pointer" onClick={() => toggleSort("id")}>ID</th>
-                  <th className="p-3 cursor-pointer" onClick={() => toggleSort("name")}>Name</th>
-                  <th className="p-3 cursor-pointer" onClick={() => toggleSort("email")}>Email</th>
+                  <th
+                    className="p-3 cursor-pointer"
+                    onClick={() => toggleSort("id")}
+                  >
+                    ID
+                  </th>
+                  <th
+                    className="p-3 cursor-pointer"
+                    onClick={() => toggleSort("name")}
+                  >
+                    Name
+                  </th>
+                  <th
+                    className="p-3 cursor-pointer"
+                    onClick={() => toggleSort("email")}
+                  >
+                    Email
+                  </th>
                   <th className="p-3">Phone</th>
                   <th className="p-3">Assignments</th>
                   <th className="p-3">Actions</th>
@@ -119,14 +144,17 @@ const StudentList = () => {
               <tbody>
                 {currentRecords.length > 0 ? (
                   currentRecords.map((student) => (
-                    <tr key={student.id} className="border-b border-gray-600 hover:bg-gray-800">
+                    <tr
+                      key={student.id}
+                      className="border-b border-gray-600 hover:bg-gray-800"
+                    >
                       <td className="p-3">{student.id}</td>
                       <td className="p-3">{student.name}</td>
                       <td className="p-3">{student.email}</td>
                       <td className="p-3">{student.phone || "N/A"}</td>
                       <td className="p-3">
-                        <button 
-                        onClick={() => handleViewAssignments(student.id)}
+                        <button
+                          onClick={() => handleViewAssignments(student.id)}
                           className={`px-3 py-1 rounded ${
                             student.assignments.length > 0
                               ? "bg-blue-500 hover:bg-blue-600"
@@ -134,41 +162,79 @@ const StudentList = () => {
                           }`}
                           disabled={student.assignments.length === 0}
                         >
-                          {student.assignments.length > 0 ? "View Assignments" : "No Assignments"}
+                          {student.assignments.length > 0
+                            ? "View Assignments"
+                            : "No Assignments"}
                         </button>
                       </td>
                       <td className="p-3">
+                        {student.assignments &&
+                          student.assignments.length > 0 && (
+                            <button
+                              onClick={() => {
+                                setAssignments(student.assignments);
+                                setIsAddMarksModalOpen(true);
+                              }}
+                              className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded"
+                            >
+                              Add Marks
+                            </button>
+                          )}
+                      </td>
+
+                      {/* <td className="p-3">
                         {student.assignments.length > 0 && (
                           <button className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded">
                             Add Marks
                           </button>
                         )}
-                      </td>
+                      </td> */}
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="p-3 text-center">No records found</td>
+                    <td colSpan="6" className="p-3 text-center">
+                      No records found
+                    </td>
                   </tr>
                 )}
               </tbody>
             </table>
             <div className="flex justify-between p-4">
-              <button onClick={prevPage} disabled={currentPage === 1} className="bg-gray-700 px-3 py-1 rounded">
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className="bg-gray-700 px-3 py-1 rounded"
+              >
                 Previous
               </button>
-              <span>Page {currentPage} of {totalPages}</span>
-              <button onClick={nextPage} disabled={currentPage === totalPages} className="bg-gray-700 px-3 py-1 rounded">
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                className="bg-gray-700 px-3 py-1 rounded"
+              >
                 Next
               </button>
             </div>
           </>
         )}
       </div>
-      <AddStudentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleAddStudent} />
+      <AddStudentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddStudent}
+      />
       <AssignmentsModal
         isOpen={isAssignmentsModalOpen}
         onClose={() => setIsAssignmentsModalOpen(false)}
+        assignments={assignments}
+      />
+      <AddMarksModal
+        isOpen={isAddMarksModalOpen}
+        onClose={() => setIsAddMarksModalOpen(false)}
         assignments={assignments}
       />
       <Footer />
